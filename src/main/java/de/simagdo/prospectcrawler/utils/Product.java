@@ -4,13 +4,19 @@ public class Product {
 
     private String productName;
     private String linkToProduct;
-    private String price;
-    private String pricePerAmount;
+    private double oldPrice;
+    private double newPrice;
+    private String priceDrop;
+    private String amount;
+    private double pricePerAmount;
 
-    public Product(String productName, String linkToProduct, String price, String pricePerAmount) {
+    public Product(String productName, String linkToProduct, double oldPrice, double newPrice, String priceDrop, String amount, double pricePerAmount) {
         this.productName = productName;
         this.linkToProduct = linkToProduct;
-        this.price = price;
+        this.oldPrice = oldPrice;
+        this.newPrice = newPrice;
+        this.priceDrop=priceDrop;
+        this.amount = amount;
         this.pricePerAmount = pricePerAmount;
     }
 
@@ -30,19 +36,43 @@ public class Product {
         this.linkToProduct = linkToProduct;
     }
 
-    public String getPrice() {
-        return price;
+    public double getOldPrice() {
+        return oldPrice;
     }
 
-    public void setPrice(String price) {
-        this.price = price;
+    public void setOldPrice(double oldPrice) {
+        this.oldPrice = oldPrice;
     }
 
-    public String getPricePerAmount() {
+    public double getNewPrice() {
+        return newPrice;
+    }
+
+    public void setNewPrice(double newPrice) {
+        this.newPrice = newPrice;
+    }
+
+    public String getPriceDrop() {
+        return priceDrop;
+    }
+
+    public void setPriceDrop(String priceDrop) {
+        this.priceDrop = priceDrop;
+    }
+
+    public String getAmount() {
+        return amount;
+    }
+
+    public void setAmount(String amount) {
+        this.amount = amount;
+    }
+
+    public double getPricePerAmount() {
         return pricePerAmount;
     }
 
-    public void setPricePerAmount(String pricePerAmount) {
+    public void setPricePerAmount(double pricePerAmount) {
         this.pricePerAmount = pricePerAmount;
     }
 
@@ -51,8 +81,11 @@ public class Product {
         return "Product{" +
                 "productName='" + productName + '\'' +
                 ", linkToProduct='" + linkToProduct + '\'' +
-                ", price='" + price + '\'' +
-                ", pricePerAmount='" + pricePerAmount + '\'' +
+                ", oldPrice=" + oldPrice +
+                ", newPrice=" + newPrice +
+                ", priceDrop='" + priceDrop + '\'' +
+                ", amount='" + amount + '\'' +
+                ", pricePerAmount=" + pricePerAmount +
                 '}';
     }
 }
