@@ -8,7 +8,8 @@ public class ProspectCrawler {
 
     public static void main(String[] args) throws Exception {
         PennyCrawler pennyCrawler = new PennyCrawler(PennyCrawler.LINK);
-        pennyCrawler.getProducts();
+        pennyCrawler.getProducts().forEach(product -> System.out.println(product.toString()));
+        //pennyCrawler.getProducts();
     }
 
 }

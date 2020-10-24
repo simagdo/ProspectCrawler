@@ -8,20 +8,20 @@ public class Product {
     private double newPrice;
     private String priceDrop;
     private String amount;
-    private double pricePerAmount;
+    private String perAmount;
     private String date;
     private String category;
 
-    public Product(String productName, String linkToProduct, double oldPrice, double newPrice, String priceDrop, String amount, double pricePerAmount, String date, String category) {
+    public Product(String productName, String linkToProduct, double oldPrice, double newPrice, String priceDrop, String amount, String perAmount, String date, String category) {
         this.productName = productName;
         this.linkToProduct = linkToProduct;
         this.oldPrice = oldPrice;
         this.newPrice = newPrice;
-        this.priceDrop=priceDrop;
+        this.priceDrop = priceDrop;
         this.amount = amount;
-        this.pricePerAmount = pricePerAmount;
-        this.date=date;
-        this.category=category;
+        this.perAmount = perAmount;
+        this.date = date;
+        this.category = category;
     }
 
     public String getProductName() {
@@ -72,12 +72,12 @@ public class Product {
         this.amount = amount;
     }
 
-    public double getPricePerAmount() {
-        return pricePerAmount;
+    public String getPerAmount() {
+        return perAmount;
     }
 
-    public void setPricePerAmount(double pricePerAmount) {
-        this.pricePerAmount = pricePerAmount;
+    public void setPerAmount(String perAmount) {
+        this.perAmount = perAmount;
     }
 
     public String getDate() {
@@ -105,7 +105,7 @@ public class Product {
                 ", newPrice=" + newPrice +
                 ", priceDrop='" + priceDrop + '\'' +
                 ", amount='" + amount + '\'' +
-                ", pricePerAmount=" + pricePerAmount +
+                ", pricePerAmount=" + perAmount +
                 ", date='" + date + '\'' +
                 ", category='" + category + '\'' +
                 '}';
