@@ -5,8 +5,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.ArrayList;
-import java.util.List;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.temporal.TemporalAdjusters;
 
 public class Utils {
 
@@ -37,9 +38,41 @@ public class Utils {
         StringBuilder data = null;
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(Class.forName(Utils.class.getName()).getResourceAsStream(fileName)))) {
             String line;
-            while ((line = reader.readLine()) != null) data = (data == null ? new StringBuilder("null") : data).append(line).append("\n");
+            while ((line = reader.readLine()) != null)
+                data = (data == null ? new StringBuilder("null") : data).append(line).append("\n");
         }
         return data.toString();
+    }
+
+    public DayOfWeek convertDate(String dateInput) {
+
+        switch (dateInput) {
+            case "Montag":
+                return DayOfWeek.MONDAY;
+            case "Dienstag":
+                return DayOfWeek.TUESDAY;
+            case "Mittwoch":
+                return DayOfWeek.WEDNESDAY;
+            case "Donnerstag":
+                return DayOfWeek.THURSDAY;
+            case "Freitag":
+                return DayOfWeek.FRIDAY;
+            case "Samstag":
+                return DayOfWeek.SATURDAY;
+            default:
+                throw new IllegalStateException("Unexpected value: " + dateInput);
+        }
+
+    }
+
+    public LocalDate[] getStartEndDate(String inputDate) {
+        LocalDate[] localDates = new LocalDate[2];
+        LocalDate localDate = LocalDate.now();
+
+        localDates[0] = localDate.with(TemporalAdjusters.next(this.convertDate(inputDate)));
+        localDates[1] = localDates[0].with(TemporalAdjusters.next(DayOfWeek.SATURDAY));
+
+        return localDates;
     }
 
 }

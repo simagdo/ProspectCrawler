@@ -1,27 +1,31 @@
 package de.simagdo.prospectcrawler.crawler;
 
 import de.simagdo.prospectcrawler.utils.Product;
+import de.simagdo.prospectcrawler.utils.Store;
+import de.simagdo.prospectcrawler.utils.Utils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Node;
 import org.jsoup.select.Elements;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class PennyCrawler extends Crawler {
 
     public static final String LINK = "https://www.penny.de/angebote/15A-10-32";
     public static final String PENNY = "https://www.penny.de/";
+    //private final Utils utils = new Utils();
 
-    public PennyCrawler(String link) {
-        super(link);
+    public PennyCrawler(String link) throws Exception {
+        super(link, Store.PENNY);
     }
 
     @Override
-    public ArrayList<Product> getProducts() throws Exception {
-        ArrayList<Product> products = new ArrayList<>();
+    public void crawlProducts() throws Exception {
         String data = this.getData();
+        Utils utils = new Utils();
 
         Document document = Jsoup.parse(data);
 
@@ -41,7 +45,10 @@ public class PennyCrawler extends Crawler {
                     category += split[i].substring(0, 1).toUpperCase() + split[i].substring(1) + " ";
                 }
 
-                System.out.println("ID: " + id + ", Date: " + date + ", Category: " + category);
+                this.addDate(date);
+                this.addCategory(category);
+
+                //System.out.println("ID: " + id + ", Date: " + date + ", Category: " + category);
 
                 Elements links = document.select("a.tile__link--cover");
                 int index = 0;
@@ -68,6 +75,7 @@ public class PennyCrawler extends Crawler {
                                     String productName = productNameElement.text().replace("*", "");
                                     String amount = amountElement.text();
                                     String perAmount = "";
+                                    LocalDate[] localDates = utils.getStartEndDate(date);
 
                                     //Replace special Characters within the Prices Array
                                     for (int i = 0; i < prices.length; i++) {
@@ -97,12 +105,12 @@ public class PennyCrawler extends Crawler {
                                     }
 
                                     //Get the Per Amount
-                                    if (amount.contains("je")) {
+                                    if (amount.contains("=")) {
                                         perAmount = amount.substring(amount.indexOf("=") + 1).replace(")", "");
                                     }
 
                                     //System.out.println("Old Price: " + oldPrice + ", New Price: " + newPrice + ", Drop: " + priceDrop + ", Product: " + productName + ", Amount: " + amount + ", Per Amount: " + perAmount);
-                                    products.add(new Product(productName, PENNY + links.get(index).attr("href"), oldPrice, newPrice, priceDrop, amount, perAmount, date, category));
+                                    this.products.add(new Product(productName, PENNY + links.get(index).attr("href"), oldPrice, newPrice, priceDrop, amount, perAmount, date, localDates[0], localDates[1], category));
                                     index++;
                                 }
                             }
@@ -114,8 +122,6 @@ public class PennyCrawler extends Crawler {
                 category = "";
             }
         }
-
-        return products;
     }
 
 }

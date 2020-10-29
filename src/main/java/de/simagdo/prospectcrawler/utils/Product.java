@@ -1,5 +1,7 @@
 package de.simagdo.prospectcrawler.utils;
 
+import java.time.LocalDate;
+
 public class Product {
 
     private String productName;
@@ -10,9 +12,11 @@ public class Product {
     private String amount;
     private String perAmount;
     private String date;
+    private LocalDate fromDate;
+    private LocalDate toDate;
     private String category;
 
-    public Product(String productName, String linkToProduct, double oldPrice, double newPrice, String priceDrop, String amount, String perAmount, String date, String category) {
+    public Product(String productName, String linkToProduct, double oldPrice, double newPrice, String priceDrop, String amount, String perAmount, String date, LocalDate fromDate, LocalDate toDate, String category) {
         this.productName = productName;
         this.linkToProduct = linkToProduct;
         this.oldPrice = oldPrice;
@@ -21,6 +25,8 @@ public class Product {
         this.amount = amount;
         this.perAmount = perAmount;
         this.date = date;
+        this.fromDate = fromDate;
+        this.toDate = toDate;
         this.category = category;
     }
 
@@ -88,6 +94,22 @@ public class Product {
         this.date = date;
     }
 
+    public LocalDate getFromDate() {
+        return fromDate;
+    }
+
+    public void setFromDate(LocalDate fromDate) {
+        this.fromDate = fromDate;
+    }
+
+    public LocalDate getToDate() {
+        return toDate;
+    }
+
+    public void setToDate(LocalDate toDate) {
+        this.toDate = toDate;
+    }
+
     public String getCategory() {
         return category;
     }
@@ -105,8 +127,10 @@ public class Product {
                 ", newPrice=" + newPrice +
                 ", priceDrop='" + priceDrop + '\'' +
                 ", amount='" + amount + '\'' +
-                ", pricePerAmount=" + perAmount +
+                ", perAmount='" + perAmount + '\'' +
                 ", date='" + date + '\'' +
+                ", fromDate=" + fromDate +
+                ", toDate=" + toDate +
                 ", category='" + category + '\'' +
                 '}';
     }
