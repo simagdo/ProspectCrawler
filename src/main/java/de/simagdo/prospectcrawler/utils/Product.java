@@ -1,5 +1,6 @@
 package de.simagdo.prospectcrawler.utils;
 
+import java.io.File;
 import java.time.LocalDate;
 
 public class Product {
@@ -11,12 +12,21 @@ public class Product {
     private String priceDrop;
     private String amount;
     private String perAmount;
+    private String unit;
     private String date;
     private LocalDate fromDate;
     private LocalDate toDate;
     private String category;
+    private String imageURL;
+    private String imagePath;
+    private String relativeImagePath;
+    private File image;
 
-    public Product(String productName, String linkToProduct, double oldPrice, double newPrice, String priceDrop, String amount, String perAmount, String date, LocalDate fromDate, LocalDate toDate, String category) {
+    public Product(String productName, String linkToProduct, double oldPrice, double newPrice, String priceDrop, String amount, String perAmount, String unit, String date, LocalDate fromDate, LocalDate toDate, String category, String imageURL) {
+        this(productName, linkToProduct, oldPrice, newPrice, priceDrop, amount, perAmount, unit, date, fromDate, toDate, category, imageURL, "", "",null);
+    }
+
+    public Product(String productName, String linkToProduct, double oldPrice, double newPrice, String priceDrop, String amount, String perAmount, String unit, String date, LocalDate fromDate, LocalDate toDate, String category, String imageURL, String imagePath, String relativeImagePath, File image) {
         this.productName = productName;
         this.linkToProduct = linkToProduct;
         this.oldPrice = oldPrice;
@@ -24,10 +34,15 @@ public class Product {
         this.priceDrop = priceDrop;
         this.amount = amount;
         this.perAmount = perAmount;
+        this.unit = unit;
         this.date = date;
         this.fromDate = fromDate;
         this.toDate = toDate;
         this.category = category;
+        this.imageURL = imageURL;
+        this.imagePath = imagePath;
+        this.relativeImagePath=relativeImagePath;
+        this.image = image;
     }
 
     public String getProductName() {
@@ -86,6 +101,14 @@ public class Product {
         this.perAmount = perAmount;
     }
 
+    public String getUnit() {
+        return unit;
+    }
+
+    public void setUnit(String unit) {
+        this.unit = unit;
+    }
+
     public String getDate() {
         return date;
     }
@@ -118,6 +141,38 @@ public class Product {
         this.category = category;
     }
 
+    public String getImageURL() {
+        return imageURL;
+    }
+
+    public void setImageURL(String imageURL) {
+        this.imageURL = imageURL;
+    }
+
+    public String getImagePath() {
+        return imagePath;
+    }
+
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
+    }
+
+    public String getRelativeImagePath() {
+        return relativeImagePath;
+    }
+
+    public void setRelativeImagePath(String relativeImagePath) {
+        this.relativeImagePath = relativeImagePath;
+    }
+
+    public File getImage() {
+        return image;
+    }
+
+    public void setImage(File image) {
+        this.image = image;
+    }
+
     @Override
     public String toString() {
         return "Product{" +
@@ -128,10 +183,15 @@ public class Product {
                 ", priceDrop='" + priceDrop + '\'' +
                 ", amount='" + amount + '\'' +
                 ", perAmount='" + perAmount + '\'' +
+                ", unit='" + unit + '\'' +
                 ", date='" + date + '\'' +
                 ", fromDate=" + fromDate +
                 ", toDate=" + toDate +
                 ", category='" + category + '\'' +
+                ", imageURL='" + imageURL + '\'' +
+                ", imagePath='" + imagePath + '\'' +
+                ", relativeImagePath='" + relativeImagePath + '\'' +
+                ", image=" + image +
                 '}';
     }
 }

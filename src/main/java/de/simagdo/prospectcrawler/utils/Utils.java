@@ -1,6 +1,9 @@
 package de.simagdo.prospectcrawler.utils;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
@@ -10,6 +13,10 @@ import java.time.LocalDate;
 import java.time.temporal.TemporalAdjusters;
 
 public class Utils {
+
+    //private static final String IMAGE_LOCATION = "C:\\Users\\simag\\IdeaProjects\\ProspectCrawler\\ProspectCrawler\\src\\main\\resources\\Product Images";
+    private static final String IMAGE_LOCATION = "C:\\Users\\simag\\IdeaProjects\\ProspectCrawler\\prospectcrawlerfrontend\\public\\Images\\Product Images";
+    private static final String RELATIVE_IMAGE_PATH = "/Images/Product Images";
 
     /**
      * @return the Source code from the given Website
@@ -73,6 +80,32 @@ public class Utils {
         localDates[1] = localDates[0].with(TemporalAdjusters.next(DayOfWeek.SATURDAY));
 
         return localDates;
+    }
+
+    public String[] downloadImage(String input, String productName) {
+        String[] filePath = new String[2];
+        BufferedImage image;
+        try {
+            URL url = new URL(input);
+
+            //Read the URL
+            image = ImageIO.read(url);
+
+            //For PNG
+            if (input.contains("png")) {
+                filePath[0] = IMAGE_LOCATION + "\\" + productName + ".png";
+                filePath[1] = RELATIVE_IMAGE_PATH + "/" + productName + ".png";
+                ImageIO.write(image, "png", new File(filePath[0]));
+            } else if (input.contains("jpg")) {
+                filePath[0] = IMAGE_LOCATION + "\\" + productName + ".jpg";
+                filePath[1] = RELATIVE_IMAGE_PATH + "/" + productName + ".jpg";
+                ImageIO.write(image, "jpg", new File(filePath[0]));
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return filePath;
     }
 
 }

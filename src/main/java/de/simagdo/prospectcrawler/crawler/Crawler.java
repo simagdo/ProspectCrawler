@@ -66,7 +66,14 @@ public abstract class Crawler {
     }
 
     public void insertProducts() {
+        String[] images = new String[2];
         for (Product product : this.products) {
+
+            //Download Image
+            images = this.utils.downloadImage(product.getImageURL(), product.getProductName());
+            product.setImagePath(images[0]);
+            product.setRelativeImagePath(images[1]);
+
             this.dbTools.addProduct(this.store, product);
         }
     }

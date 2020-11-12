@@ -17,6 +17,7 @@ public class DBTools {
     public String url = "jdbc:mariadb://localhost:3306";
     public String user = "root";
     public String password = "";
+    private int shopID;
 
     /**
      * @return Open the connection to the DataBase
@@ -77,7 +78,8 @@ public class DBTools {
     }
 
     public void addValidityDate(Store store, LocalDate startDate, LocalDate endDate) {
-        int shopID;
+
+        if (this.shopID != 0) this.shopID = this.getID("Shops", "ShopID", "ShopName", store.getStore());
 
         try {
             this.statement = this.getConnection().createStatement();
@@ -95,7 +97,8 @@ public class DBTools {
     }
 
     public void addCategory(Store store, String category) {
-        int shopID;
+
+        if (this.shopID != 0) this.shopID = this.getID("Shops", "ShopID", "ShopName", store.getStore());
 
         try {
             this.statement = this.getConnection().createStatement();
@@ -117,23 +120,41 @@ public class DBTools {
     }
 
     public void addProduct(Store store, Product product) {
-        int shopID;
 
         try {
-            this.statement = this.getConnection().createStatement();
 
-            //Get the ShopID
-            shopID = this.getID("Shops", "ShopID", "ShopName", store.getStore());
-            System.out.println(shopID);
+            if (this.shopID == 0) {
+                this.shopID = this.getID("Shops", "ShopID", "ShopName", store.getStore());
+                this.statement = this.getConnection().createStatement();
+            }
 
-            String sqlStatement = "INSERT INTO Products(ShopID, ValidityID, CategoryID, ProductName, Link, OldPrice, NewPrice, Amount, PerAmount)\n" +
+            product.setImagePath(product.getImagePath().replace("\\", "\\\\"));
+            //product.setRelativeImagePath(product.getRelativeImagePath().replace("/", "//"));
+
+            String insertProduct = "INSERT INTO Products(ProductName, ImagePath, RelativeImagePath)\n" +
                     "SELECT *\n" +
-                    "FROM (SELECT " + shopID + " AS 'ShopID', (SELECT ValidityID FROM ValidityDate WHERE FromDate = '" + product.getFromDate() + "' AND ToDate = '" + product.getToDate() + "') AS 'ValidityID', " +
-                    "(SELECT CategoryID FROM Category WHERE Category = '" + product.getCategory() + "') AS 'CategoryID', '" + product.getProductName() + "', '" + product.getLinkToProduct() + "', " + product.getOldPrice() + ", " + product.getNewPrice() + ", '" + product.getAmount() + "', '" + product.getPerAmount() + "') AS temp\n" +
-                    "WHERE NOT EXISTS(SELECT ProductName FROM Products WHERE ProductName = '" + product.getProductName() + "' AND ShopID = " + shopID + ");\n";
-            System.out.println(sqlStatement);
-            System.out.println(product.toString());
-            this.statement.executeQuery(sqlStatement);
+                    "FROM (SELECT '" + product.getProductName() + "',\n" +
+                    "             '" + product.getImagePath() + "',\n" +
+                    "'" + product.getRelativeImagePath() + "') AS temp\n" +
+                    "WHERE NOT EXISTS(\n" +
+                    "        SELECT ProductName FROM Products WHERE ProductName = '" + product.getProductName() + "');";
+            this.statement.executeQuery(insertProduct);
+
+            String insertOffer = "INSERT INTO AvailableOffers(ShopID, ValidityID, ProductID, OldPrice, NewPrice, Link, Amount, PerAmount, Unit)\n" +
+                    "SELECT *\n" +
+                    "FROM (SELECT " + shopID + "                                                                                             AS ShopID,\n" +
+                    "             (SELECT ValidityID\n" +
+                    "              FROM ValidityDate\n" +
+                    "              WHERE FromDate = '" + product.getFromDate() + "'\n" +
+                    "                AND ToDate = '" + product.getToDate() + "')                                                                 AS ValidityID,\n" +
+                    "             (SELECT ProductID FROM Products WHERE ProductName = '" + product.getProductName() + "') AS ProductID,\n" +
+                    "             " + product.getOldPrice() + ",\n" +
+                    "             " + product.getNewPrice() + ",\n" +
+                    "             '" + product.getLinkToProduct() + "',\n" +
+                    "             '" + product.getAmount() + "' AS Amount,\n" +
+                    "             '" + product.getPerAmount() + "' AS PerAmount,\n" +
+                    "             '" + product.getUnit() + "') AS temp;";
+            this.statement.executeQuery(insertOffer);
 
         } catch (SQLException e) {
             e.printStackTrace();

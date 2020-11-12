@@ -15,7 +15,7 @@ import java.util.ArrayList;
 public class PennyCrawler extends Crawler {
 
     public static final String LINK = "https://www.penny.de/angebote/15A-10-32";
-    public static final String PENNY = "https://www.penny.de/";
+    public static final String PENNY = "https://www.penny.de";
     //private final Utils utils = new Utils();
 
     public PennyCrawler(String link) throws Exception {
@@ -32,6 +32,9 @@ public class PennyCrawler extends Crawler {
         Elements sections = document.getElementsByTag("section");
         String date = "";
         String category = "";
+
+        Elements links = document.select("a.tile__link--cover");
+        int index = 0;
 
         for (Element section : sections) {
             String id = section.id();
@@ -50,9 +53,6 @@ public class PennyCrawler extends Crawler {
 
                 //System.out.println("ID: " + id + ", Date: " + date + ", Category: " + category);
 
-                Elements links = document.select("a.tile__link--cover");
-                int index = 0;
-
                 for (Node content : section.childNodes()) {
                     if (content instanceof Element && ((Element) content).className().contains("category-list")) {
                         Element child = ((Element) content).child(0);
@@ -63,6 +63,7 @@ public class PennyCrawler extends Crawler {
 
                                 if (article.childNodes().size() == 13) {
                                     Element priceElement = article.child(1);
+                                    Element imageElement = article.child(2);
                                     Element offerElement = article.child(3);
                                     Element dropElement = offerElement.child(0);
                                     Element productNameElement = offerElement.child(1);
@@ -74,8 +75,11 @@ public class PennyCrawler extends Crawler {
                                     String priceDrop = "";
                                     String productName = productNameElement.text().replace("*", "");
                                     String amount = amountElement.text();
-                                    String perAmount = "";
+                                    String perAmount = amountElement.text();
+                                    String unit = amountElement.text();
                                     LocalDate[] localDates = utils.getStartEndDate(date);
+                                    String link = productNameElement.child(0).attr("href");
+                                    String imageURL = imageElement.child(0).child(0).attr("src");
 
                                     //Replace special Characters within the Prices Array
                                     for (int i = 0; i < prices.length; i++) {
@@ -105,12 +109,16 @@ public class PennyCrawler extends Crawler {
                                     }
 
                                     //Get the Per Amount
-                                    if (amount.contains("=")) {
-                                        perAmount = amount.substring(amount.indexOf("=") + 1).replace(")", "");
+                                    if (perAmount.contains("=")) {
+                                        perAmount = perAmount.substring(perAmount.indexOf("=") + 2).replace(")", "");
+                                        unit = unit.substring(unit.indexOf("(") + 1, unit.indexOf("=") - 1);
+                                    } else {
+                                        perAmount = "";
+                                        unit = "";
                                     }
 
                                     //System.out.println("Old Price: " + oldPrice + ", New Price: " + newPrice + ", Drop: " + priceDrop + ", Product: " + productName + ", Amount: " + amount + ", Per Amount: " + perAmount);
-                                    this.products.add(new Product(productName, PENNY + links.get(index).attr("href"), oldPrice, newPrice, priceDrop, amount, perAmount, date, localDates[0], localDates[1], category));
+                                    this.products.add(new Product(productName, PENNY + link, oldPrice, newPrice, priceDrop, amount, perAmount, unit, date, localDates[0], localDates[1], category, imageURL));
                                     index++;
                                 }
                             }
@@ -122,6 +130,9 @@ public class PennyCrawler extends Crawler {
                 category = "";
             }
         }
+
+        System.out.println("Offers: " + this.products.size() + ", Links: " + links.size());
+
     }
 
 }
