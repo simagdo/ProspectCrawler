@@ -2,7 +2,9 @@ package de.simagdo.prospectcrawler.utils;
 
 public enum Store {
 
-    PENNY("Penny");
+    PENNY("Penny"),
+    REWE("Rewe"),
+    ALDI("Aldi");
 
     private String store;
 

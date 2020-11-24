@@ -83,7 +83,7 @@ public class PennyCrawler extends Crawler {
 
                                     //Replace special Characters within the Prices Array
                                     for (int i = 0; i < prices.length; i++) {
-                                        prices[i] = prices[i].replace("%", "").replace("*", "").replace(".–", ".00");
+                                        prices[i] = prices[i].replace("%", "").replace("*", "").replace(".–", ".00").replace("€", "");
                                     }
 
                                     //Get the Old and new Price

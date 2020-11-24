@@ -32,7 +32,6 @@ public abstract class Crawler {
         this.categories = new ArrayList<>();
         this.categoriesWithID = new HashMap<>();
         this.dbTools = new DBTools();
-        this.crawlProducts();
     }
 
     public String getData() throws Exception {
