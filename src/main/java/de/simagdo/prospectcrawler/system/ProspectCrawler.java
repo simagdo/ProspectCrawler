@@ -3,6 +3,7 @@ package de.simagdo.prospectcrawler.system;
 import de.simagdo.prospectcrawler.crawler.PennyCrawler;
 import de.simagdo.prospectcrawler.crawler.ReweCrawler;
 import de.simagdo.prospectcrawler.database.DBTools;
+import de.simagdo.prospectcrawler.utils.Store;
 
 public class ProspectCrawler {
 
@@ -13,7 +14,7 @@ public class ProspectCrawler {
         //pennyCrawler.insertDates();
         //pennyCrawler.insertCategories();
         pennyCrawler.insertProducts();*/
-        ReweCrawler reweCrawler = new ReweCrawler();
+        ReweCrawler reweCrawler = new ReweCrawler(ReweCrawler.LINK, Store.REWE);
         reweCrawler.crawlProducts();
     }
 
